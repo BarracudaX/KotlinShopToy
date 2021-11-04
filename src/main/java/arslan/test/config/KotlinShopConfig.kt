@@ -19,7 +19,7 @@ import java.util.*
 import javax.persistence.EntityManagerFactory
 import javax.sql.DataSource
 
-@SpringBootApplication(scanBasePackages = ["arslan.test.controllers"])
+@SpringBootApplication(scanBasePackages = ["arslan.test.*"])
 @EnableTransactionManagement
 @EnableJpaRepositories("arslan.test.dao")
 class KotlinShopConfig {
@@ -38,6 +38,7 @@ class KotlinShopConfig {
     private fun hibernateProperties() = Properties().apply {
         put("hibernate.dialect","org.hibernate.dialect.H2Dialect")
         put("hibernate.hbm2ddl.auto","create")
+        put("hibernate.show_sql","true")
     }
 
 }
