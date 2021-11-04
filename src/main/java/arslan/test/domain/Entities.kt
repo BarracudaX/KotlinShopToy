@@ -16,5 +16,20 @@ class User(@Column(unique = true) val username: String,
         return "User(username='$username', firstName='$firstName', lastName='$lastName', birthDate=$birthDate, id=$id)"
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as User
+
+        if (username != other.username) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return username.hashCode()
+    }
+
 
 }
