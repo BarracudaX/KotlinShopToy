@@ -43,7 +43,6 @@ class UserServiceTest @Autowired constructor(val sut: UserService, val dao: User
         assertThrows<EmptyResultDataAccessException> { sut.findById(userId) }
     }
 
-    @Disabled("hibernate returns cached instance and does not propagate the update to the database even after explicit flush")
     @Test
     internal fun `should update the given user`() {
         sut.add(user)
@@ -51,7 +50,7 @@ class UserServiceTest @Autowired constructor(val sut: UserService, val dao: User
 
         val updatedUser = user.copy(username = "NEW_USERNAME",password = "NEW_PASSWORD", firstName = "NEW_FIRST_NAME",
                                     lastName = "NEW_LAST_NAME",birthDate = localDate(24))
-        sut.update(user)
+        sut.update(updatedUser)
         dao.flush()
 
         println(sut.findById(user.id!!))
