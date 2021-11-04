@@ -31,5 +31,9 @@ class User(@Column(unique = true) val username: String,
         return username.hashCode()
     }
 
+    fun copy( username: String = this.username, password:String = this.password,firstName: String = this.firstName,
+              lastName: String = this.lastName, birthDate: LocalDate = this.birthDate) : User {
+        return User(username,password,firstName,lastName,birthDate).apply { this.id = this@User.id }
+    }
 
 }
