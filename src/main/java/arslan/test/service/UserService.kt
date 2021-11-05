@@ -21,6 +21,7 @@ sealed interface UserService : Service<User> {
 
         override fun remove(user: User) = userDao.delete(user)
 
+        @Transactional(readOnly = true)
         override fun findAll(pageable: Pageable): Page<User> = userDao.findAll(pageable)
 
         override fun update(user: User) {
@@ -31,6 +32,7 @@ sealed interface UserService : Service<User> {
 
         override fun <R> executeAndGet(block: Dao<User>.() -> R) : R = userDao.block()
 
+        @Transactional(readOnly = true)
         override fun findById(id: Long): User = userDao.findById(id)
             .orElseThrow{ EmptyResultDataAccessException("User with id $id not found",1) }
 
