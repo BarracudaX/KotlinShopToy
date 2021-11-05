@@ -57,7 +57,6 @@ class UserServiceTest @Autowired constructor(val sut: UserService, val dao: User
         sut.update(updatedUser)
         dao.flush()
 
-        println(sut.findById(user.id!!))
         sut.findById(user.id!!).sameAs(updatedUser)
     }
 
