@@ -1,5 +1,6 @@
 package utils
 
+import arslan.test.domain.Company
 import arslan.test.domain.User
 import org.junit.jupiter.api.assertAll
 import java.time.LocalDate
@@ -35,5 +36,14 @@ infix fun User.sameAs(other: User) {
         { assertEquals(this.firstName, other.firstName) },
         { assertEquals(this.lastName, other.lastName) },
         { assertEquals(this.birthDate, other.birthDate) }
+    )
+}
+
+/**
+ * Asserts that all fields(except the id field) of this company are the same(equal) as the values of fields of the given company.
+ */
+infix fun Company.sameAs(other: Company) {
+    assertAll(
+        {assertEquals(this.companyName,other.companyName)}
     )
 }

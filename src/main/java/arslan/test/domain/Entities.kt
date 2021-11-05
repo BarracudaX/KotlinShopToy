@@ -34,19 +34,34 @@ class User(@Column(unique = true) val username: String,
 
     fun copy( username: String = this.username, password:String = this.password,firstName: String = this.firstName,
               lastName: String = this.lastName, birthDate: LocalDate = this.birthDate) : User {
-        return User(username,password,firstName,lastName,birthDate).apply { this.id = this@User.id }
+        return User(username,password,firstName,lastName,birthDate).also { it.id = id}
     }
 
 }
 
 @Entity
 @Table(name = "Companies")
-class Company( val companyName: String) {
+class Company(@Column(unique = true) val companyName: String) {
 
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @field:Id
     var id: Long? = null
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
 
+        other as Company
+
+        if (companyName != other.companyName) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return companyName.hashCode()
+    }
+
+    fun copy(companyName: String = this.companyName) = Company(companyName).also { it.id = id }
 
 }
 

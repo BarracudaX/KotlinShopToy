@@ -3,6 +3,7 @@ package arslan.test.service
 import arslan.test.dao.CompanyDao
 import arslan.test.dao.Dao
 import arslan.test.domain.Company
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.transaction.annotation.Transactional
@@ -14,12 +15,10 @@ sealed interface CompanyService : Service<Company> {
     class CompanyServiceImpl(val companyDao: CompanyDao) : CompanyService {
 
         override fun add(company: Company) {
-            TODO("Not yet implemented")
+            companyDao.save(company)
         }
 
-        override fun remove(company: Company) {
-            TODO("Not yet implemented")
-        }
+        override fun remove(company: Company) = companyDao.delete(company)
 
         @Transactional(readOnly = true)
         override fun findAll(pageable: Pageable): Page<Company> {
@@ -27,7 +26,7 @@ sealed interface CompanyService : Service<Company> {
         }
 
         override fun update(company: Company) {
-            TODO("Not yet implemented")
+            companyDao.save(company)
         }
 
         override fun execute(block: Dao<Company>.() -> Unit) {
@@ -40,8 +39,9 @@ sealed interface CompanyService : Service<Company> {
 
         @Transactional(readOnly = true)
         override fun findById(id: Long): Company {
-            TODO("Not yet implemented")
+            return companyDao.findById(id).orElseThrow{ EmptyResultDataAccessException("Company with id $id not found",1)}
         }
+
 
     }
 
