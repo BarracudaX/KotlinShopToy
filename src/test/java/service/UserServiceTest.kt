@@ -7,25 +7,41 @@ import arslan.test.service.UserService
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Configuration
 import org.springframework.dao.EmptyResultDataAccessException
-import org.springframework.orm.jpa.EntityManagerFactoryUtils
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig
-import org.springframework.test.context.transaction.BeforeTransaction
+import org.springframework.data.domain.PageRequest
+import org.springframework.test.context.jdbc.Sql
 import org.springframework.transaction.annotation.Transactional
 import utils.localDate
 import utils.sameAs
-import java.time.LocalDate
-import java.util.concurrent.ThreadLocalRandom
-import kotlin.random.Random
-import kotlin.random.asKotlinRandom
-import kotlin.test.assertEquals
+import utils.usersSameAs
+import java.awt.print.Pageable
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 @SpringBootTest(classes = [KotlinShopConfig::class],webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Transactional
 class UserServiceTest @Autowired constructor(val sut: UserService, val dao: UserDao) {
 
     val user = User("ANY_USERNAME","ANY_PASSWORD","ANY_FIRST_NAME","ANY_LAST_NAME", localDate(18))
+    val users = mutableListOf<User>()
+
+    @BeforeEach
+    fun setUp() {
+        for(x in 1..20) {
+            val user = User("USERNAME$x","PASSWORD$x","FIRST_NAME$x","LAST_NAME$x", localDate(18))
+            dao.save(user)
+            users.add(user)
+        }
+        dao.flush()
+    }
+
+    @Test
+    internal fun `should return page containing the given number of users(if possible)`() {
+        val request = PageRequest.of(2, 5)
+        val page = sut.findAll(request)
+
+        page.content usersSameAs users.subList(10, 15)
+    }
 
     @Test
     internal fun `should add the given user to the database`() {

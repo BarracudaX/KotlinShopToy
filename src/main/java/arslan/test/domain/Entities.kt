@@ -6,12 +6,22 @@ import javax.persistence.EnumType.STRING
 
 @Entity
 @Table(name = "USERS")
-class User(@Column(unique = true) val username: String,
-           val password:String,val firstName: String, val lastName: String, val birthDate: LocalDate) {
+data class User(
+
+    @Column(unique = true) val username: String,
+    val password: String,
+
+    val firstName: String,
+
+    val lastName: String,
+
+    val birthDate: LocalDate,
 
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @field:Id
-    var id: Long? = null
+    val id: Long? = null
+) {
+
 
     override fun toString(): String {
         return "User(username='$username', firstName='$firstName', lastName='$lastName', birthDate=$birthDate, id=$id)"
@@ -31,21 +41,19 @@ class User(@Column(unique = true) val username: String,
     override fun hashCode(): Int {
         return username.hashCode()
     }
-
-    fun copy( username: String = this.username, password:String = this.password,firstName: String = this.firstName,
-              lastName: String = this.lastName, birthDate: LocalDate = this.birthDate) : User {
-        return User(username,password,firstName,lastName,birthDate).also { it.id = id}
-    }
-
 }
 
 @Entity
 @Table(name = "Companies")
-class Company(@Column(unique = true) val companyName: String) {
+data class Company(
+    @Column(unique = true) val companyName: String,
 
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @field:Id
-    var id: Long? = null
+    val id: Long? = null
+) {
+
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -61,29 +69,26 @@ class Company(@Column(unique = true) val companyName: String) {
         return companyName.hashCode()
     }
 
-    fun copy(companyName: String = this.companyName) = Company(companyName).also { it.id = id }
-
 }
 
 @Entity
 @Table(name = "Products")
-class Product (val productName: String, val price: Price, company: Company) {
-
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @field:Id
-    var id: Long? = null
+data class Product(
+    val productName: String, val price: Price,
 
     @JoinColumn(name = "company_id")
     @ManyToOne
-    val company =  company
+    val company: Company,
 
-}
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @field:Id
+    val id: Long? = null
+
+)
 
 @Embeddable
-class Price(val amount: Double, @Enumerated(STRING) val currency: Currency) {
-
-}
+data class Price(val amount: Double, @Enumerated(STRING) val currency: Currency)
 
 enum class Currency {
-    EUR,DOLLARS,YEN
+    EUR, DOLLARS, YEN
 }

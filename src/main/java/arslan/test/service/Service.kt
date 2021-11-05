@@ -19,4 +19,5 @@ interface Service<T> {
     infix fun <R> executeAndGet(block: Dao<T>.() -> R) : R
 
     infix fun findById(id: Long) : T
+
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.assertAll
 import java.time.LocalDate
 import kotlin.random.Random
 import kotlin.test.assertEquals
+import kotlin.test.fail
 
 /**
  * Returns a localdate with random month and random day of month. The year set to be the year of birth of person that
@@ -46,4 +47,14 @@ infix fun Company.sameAs(other: Company) {
     assertAll(
         {assertEquals(this.companyName,other.companyName)}
     )
+}
+
+infix fun List<User>.usersSameAs(others: List<User>) {
+    if (this.size != others.size) {
+        fail("Lists have different sizes")
+    }
+
+    for (x in 0 until this.size) {
+        this[x] sameAs others[x]
+    }
 }
