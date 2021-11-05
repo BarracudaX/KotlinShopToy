@@ -11,9 +11,13 @@ import org.springframework.transaction.annotation.Transactional
 
 sealed interface UserService : Service<User> {
 
+    fun findByUsername(username: String): User
+
     @Transactional
     @org.springframework.stereotype.Service
     class UserServiceImpl(val userDao: UserDao) : UserService {
+
+        override fun findByUsername(username: String) = userDao.findByUsername(username)
 
         override fun add(user: User) {
             userDao.save(user)

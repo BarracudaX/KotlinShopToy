@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface UserDao : Dao<User> {
 
+    fun findByUsername(username: String): User
+
 }

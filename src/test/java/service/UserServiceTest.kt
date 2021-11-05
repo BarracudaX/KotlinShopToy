@@ -36,6 +36,23 @@ class UserServiceTest @Autowired constructor(val sut: UserService, val dao: User
     }
 
     @Test
+    internal fun `should throw empty result data access exception when looking for a user with not existing id`() {
+        assertThrows<EmptyResultDataAccessException> { sut.findById(Long.MAX_VALUE) }
+    }
+
+    @Test
+    internal fun `should throw empty result data access exception when looking for a user with non-existing username`() {
+        assertThrows<EmptyResultDataAccessException> { sut.findByUsername("I_DO_NOT_EXIST") }
+    }
+
+    @Test
+    internal fun `should return user by username`() {
+        sut.add(user)
+
+        sut.findByUsername(user.username) sameAs user
+    }
+
+    @Test
     internal fun `should return page containing the given number of users(if possible)`() {
         val request = PageRequest.of(2, 5)
         val page = sut.findAll(request)
